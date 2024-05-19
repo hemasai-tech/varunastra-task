@@ -1,7 +1,7 @@
 // Login.js
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ToastAndroid, BackHandler } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from './redux/actionTypes';
@@ -12,10 +12,22 @@ const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const getDetails = async () => {
+    const details = await AsyncStorage.getItem('userDetails')
+    if (details !== null) {
+      navigation.navigate('MapScreen')
+    } else {
+      navigation.navigate("Login")
+    }
+  }
+
+  useEffect(() => {
+    getDetails()
+  }, [])
+
   const handleLogin = async () => {
     // Validate user input
     if (username !== "" && password !== "") {
-      console.log("inside id");
       const userDetails = {
         username: username,
         password: password

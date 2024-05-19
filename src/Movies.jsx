@@ -1,18 +1,41 @@
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Movies = ({ navigation }) => {
   const [moviesData, setMoviesData] = useState([]);
   const [loading, setLoading] = useState(false);
   const state = useSelector(state => state?.user)
 
+  const getDetails = async () => {
+    const details = await AsyncStorage.getItem('userDetails')
+    if (details !== null) {
+      navigation.navigate("MapScreen")
+    } else {
+      navigation.navigate("Login")
+    }
+  }
+
+  useEffect(() => {
+    const backAction = () => {
+      getDetails();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
   const getMovies = async () => {
     setLoading(true)
     try {
       const movies = await axios.get('https://dummyapi.online/api/movies')
-      console.log(movies.status);
       if (movies.status === 200) {
         setMoviesData(movies?.data)
       } else {
@@ -20,7 +43,6 @@ const Movies = ({ navigation }) => {
       }
       setLoading(false)
     } catch (error) {
-      console.log(error);
       setLoading(false)
     }
   }
@@ -108,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   indicator: {
-    marginBottom:'auto',
-    marginTop:'auto'
+    marginBottom: 'auto',
+    marginTop: 'auto'
   }
 })

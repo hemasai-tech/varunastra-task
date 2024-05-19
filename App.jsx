@@ -8,6 +8,7 @@ import MapComponent from './src/mapcomponent/MapComponent';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import Movies from './src/Movies';
+import LocationDetails from './src/LocationDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ function App() {
           <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
           <Stack.Screen name="MapScreen" component={MapComponent} />
           <Stack.Screen name="Movies" component={Movies} options={{ headerShown: false }} />
+          <Stack.Screen name="LocationDetails" component={LocationDetails}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
